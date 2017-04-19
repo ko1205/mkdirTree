@@ -12,7 +12,7 @@ public:
     ~MainWindow();
 
 private:
-    int setWindow();
+    void setWindow();
 };
 
 #endif // MAINWINDOW_H
