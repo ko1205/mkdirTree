@@ -88,7 +88,7 @@ void MainWindow::setWindow(QApplication *app)
     setCentralWidget(centerWidget);
 
     connect(cancelButton,SIGNAL(clicked()),app,SLOT(quit()));
-    connect(createFolder,SIGNAL(triggered(bool)),templateView,SLOT(insert()));
+    connect(createFolder,SIGNAL(triggered(bool)),templateView,SLOT(insertFolder()));
 
 //    return 0;
 }

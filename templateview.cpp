@@ -1,5 +1,6 @@
 #include "templateview.h"
 #include <QMessageBox>
+#include <QShortcut>
 
 TemplateView::TemplateView()
 {
@@ -27,17 +28,21 @@ TemplateView::TemplateView()
 
 
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Delete), this);
     installEventFilter(this);
 
     popupMenu = new QMenu(this);
     insertAct = new QAction("insert",this);
-    test2 = new QAction("test2",this);
+    deleteAct = new QAction("delete",this);
     popupMenu->addAction(insertAct);
-    popupMenu->addAction(test2);
+    popupMenu->addAction(deleteAct);
 
     connect(this,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(storOldName(QModelIndex)));
     connect(templateModel,SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),this,SLOT(checkRename(QModelIndex)));
-    connect(insertAct,SIGNAL(triggered(bool)),this,SLOT(insert()));
+    connect(insertAct,SIGNAL(triggered(bool)),this,SLOT(insertFolder()));
+    connect(deleteAct,SIGNAL(triggered(bool)),this,SLOT(deleteFolder()));
+    connect(shortcut,SIGNAL(activated()),this,SLOT(deleteFolder()));
     connect(templateModel,SIGNAL(rowsInserted(QModelIndex,int,int)),this,SLOT(activeStor(QModelIndex,int ,int)));
 }
 
@@ -74,12 +79,16 @@ void TemplateView::contextMenuEvent(QContextMenuEvent *event)
     popupMenu->exec(event->globalPos());
 }
 
-void TemplateView::insert()
+void TemplateView::insertFolder()
 {
     NewFolderName = QString(tr("NewFolder"));
     QStandardItem *newFolder = new QStandardItem(NewFolderName);
     newFolder->setIcon(folderIcon);
     QModelIndex index= currentIndex();
+    if(index==rootIndex() || !index.isValid())
+    {
+        index = templateModel->indexFromItem(rootItem);
+    }
 
     if(templateModel->hasChildren(index))
     {
@@ -91,6 +100,29 @@ void TemplateView::insert()
         templateModel->appendRow(newFolder);
     }else{
         templateModel->itemFromIndex(index)->appendRow(newFolder);
+    }
+}
+
+void TemplateView::deleteFolder()
+{
+    QModelIndexList list = selectedIndexes();
+    QList<QStandardItem*> items;
+    items.clear();
+    foreach (QModelIndex index, list)
+    {
+        if(rootItem!=templateModel->itemFromIndex(index))
+        {
+////////////////////////////////////////
+/// 조건문 추가 필요 인덱스 중에 상위 인덱스가 포함되어 있으면 취소/////
+/// //////
+            items.append(templateModel->itemFromIndex(index));
+        }
+    }
+    foreach (QStandardItem *item, items) {
+        QModelIndex deleteIndex= templateModel->indexFromItem(item);
+        QModelIndex parent = templateModel->parent(deleteIndex);
+        int row = deleteIndex.row();
+        templateModel->removeRow(row,parent);
     }
 }
 
@@ -173,36 +205,54 @@ void TemplateView::activeStor(const QModelIndex &index,int start,int end)
 //    QMessageBox::information(this,"TEST",data+" "+QString::number(start)+" "+QString::number(end),QMessageBox::Yes);
 }
 
-bool TemplateView::eventFilter(QObject *object, QEvent *event)
-{
-    return QTreeView::eventFilter(object,event);
-}
 
 void TemplateView::dropEvent(QDropEvent *event)
 {
-//    QMessageBox::information(this,"test","dropEvent",QMessageBox::Yes);
-//    QStringList SList = event->mimeData()->formats();
-//    QByteArray testaa =  event->mimeData()->data("application/x-qabstractitemmodeldatalist");
-//    foreach(QString a, SList)
-//    {
-//        QMessageBox::information(this,"test",data,QMessageBox::Yes);
-//    }
-
     QModelIndexList selectList = selectedIndexes();
-//    foreach(QModelIndex index ,selectList)
-//    {
-//        QString selectedItem = templateModel->data(index,Qt::DisplayRole).toString();
-//        QMessageBox::information(this,"test",selectedItem,QMessageBox::Yes);
-//    }
-    QModelIndex index;
+
+    //////////////////////////////////////////////////////////////////
+    /// \brief index
+    /// private Class 의 DropOn 함수 기능 제정의
+    ///////////////////////////////////////////////////////////////
+
+    QModelIndex parent;
         // rootIndex() (i.e. the viewport) might be a valid index
 
     if (viewport()->rect().contains(event->pos())) {
-        index = indexAt(event->pos());
-        if (!index.isValid() || !visualRect(index).contains(event->pos()))
-            index = rootIndex();
+        parent = indexAt(event->pos());
+        if (!parent.isValid() || !visualRect(parent).contains(event->pos()))
+            parent = rootIndex();
     }
-    QMessageBox::information(this,"",templateModel->data(index,Qt::DisplayRole).toString(),QMessageBox::Yes);
+
+    if(parent != rootIndex())
+    {
+
+
+        foreach(QModelIndex index ,selectList)
+        {
+            for(int i=0;i<selectList.size();i++)
+            {
+                if(index!=selectList[i])
+                {
+                    if(templateModel->data(index,Qt::DisplayRole).toString()==\
+                            templateModel->data(selectList[i],Qt::DisplayRole).toString())
+                    {
+                        QMessageBox::information(this,tr("Information"),tr("selected Folder have same name"),QMessageBox::Yes);
+                        return;
+                    }
+                }
+            }
+            QString selectedItem = templateModel->data(index,Qt::DisplayRole).toString();
+            if(hasSameName(selectedItem,parent))
+            {
+                QMessageBox::information(this,tr("Information"),tr("already have the same name"),QMessageBox::Yes);
+                return;
+            }
+        }
+        QTreeView::dropEvent(event);
+    }
+    return;
+//    QMessageBox::information(this,"test",selectedItem,QMessageBox::Yes);
 
 //    QTreeView::dropEvent(event);
 }

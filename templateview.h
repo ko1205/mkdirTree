@@ -20,7 +20,8 @@ public:
 
 public slots:
     void showIndex();
-    void insert();
+    void insertFolder();
+    void deleteFolder();
     void setRootFolderName(const QString &rootName);
 
 private:
@@ -29,13 +30,12 @@ private:
     QString autoRename(QString folderName,QModelIndex &parent,int addNum=0);
     void createFolderIcon();
     void createRootFolder();
-    bool eventFilter(QObject *object, QEvent *event) override;
 
     QStandardItemModel *templateModel;
     QStandardItem *rootItem;
     QMenu *popupMenu;
     QAction *insertAct;
-    QAction *test2;
+    QAction *deleteAct;
 
     QIcon folderIcon;
     QString NewFolderName;
