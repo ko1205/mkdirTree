@@ -87,7 +87,8 @@ void MainWindow::setWindow(QApplication *app)
     centerWidget->setLayout(baseLayout);
     setCentralWidget(centerWidget);
 
-    QObject::connect(cancelButton,SIGNAL(clicked()),app,SLOT(quit()));
+    connect(cancelButton,SIGNAL(clicked()),app,SLOT(quit()));
+    connect(createFolder,SIGNAL(triggered(bool)),templateView,SLOT(insert()));
 
 //    return 0;
 }
