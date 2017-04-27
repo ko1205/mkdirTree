@@ -35,8 +35,8 @@ TemplateView::TemplateView()
 //    installEventFilter(this);
 
     popupMenu = new QMenu(this);
-    insertAct = new QAction("insert",this);
-    deleteAct = new QAction("delete",this);
+    insertAct = new QAction("CreateFolder",this);
+    deleteAct = new QAction("DeleteFolder",this);
 
     popupMenu->addAction(insertAct);
     popupMenu->addAction(deleteAct);
@@ -287,4 +287,9 @@ void TemplateView::dropEvent(QDropEvent *event)
         QTreeView::dropEvent(event);
     }
     return;
+}
+
+QVariant TemplateView::data(const QModelIndex &index, int Role) const
+{
+    return templateModel->data(index,Role);
 }

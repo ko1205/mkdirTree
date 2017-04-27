@@ -1,19 +1,51 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QMenuBar>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QTreeView>
+#include <QSplitter>
+#include <QComboBox>
+#include <QStatusBar>
 #include <QMainWindow>
 #include <QApplication>
+#include "templateview.h"
+
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QApplication *app, QWidget *parent = 0);
+    MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
-    void setWindow(QApplication *app);
+    void setWindow();
+    void createMenu();
+    void createStatusBar();
+    void createCentralWidget();
+
+
+    QMenu *fileMenu;
+    QMenu *editMenu;
+
+    QAction *newAct;
+    QAction *createAct;
+    QAction *deleteAct;
+
+    QLineEdit *rootPathEdit;
+    QPushButton *rootPathButton;
+
+    TemplateView *templateView;
+
+    QPushButton *cancelButton;
+    QPushButton *makeTreeButton;
+
 };
 
 #endif // MAINWINDOW_H

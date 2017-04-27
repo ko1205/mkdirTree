@@ -15,6 +15,7 @@ class TemplateView : public QTreeView
 public:
     TemplateView();
     ~TemplateView();
+    QVariant data(const QModelIndex &index,int Role=Qt::EditRole) const;
     void contextMenuEvent(QContextMenuEvent *event) override;
 
 

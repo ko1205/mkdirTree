@@ -1,21 +1,13 @@
 #include "mainwindow.h"
-#include "templateview.h"
-#include <QMenuBar>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QTreeView>
-#include <QSplitter>
-#include <QComboBox>
-#include <QStatusBar>
 
 
-MainWindow::MainWindow(QApplication *app,QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setWindow(app);
+    setWindow();
+    connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
+    connect(createAct,SIGNAL(triggered(bool)),templateView,SLOT(insertFolder()));
+    connect(deleteAct,SIGNAL(triggered(bool)),templateView,SLOT(deleteFolder()));
 }
 
 MainWindow::~MainWindow()
@@ -23,46 +15,61 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::setWindow(QApplication *app)
+void MainWindow::setWindow()
 {
 
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QAction *newAction = new QAction(tr("&New project"),this);
-    QAction *createFolder = new QAction(tr("CreateFolder"));
+    createMenu();
+    createStatusBar();
+    createCentralWidget();
+
+}
+
+void MainWindow::createMenu()
+{
+    newAct = new QAction(tr("&New project"),this);
+    createAct = new QAction(tr("createFolder"),this);
+    deleteAct = new QAction(tr("deleteFolder"),this);
     fileMenu = menuBar()->addMenu(tr("&File"));
     editMenu = menuBar()->addMenu(tr("&Edit"));
 
-    fileMenu->addAction(newAction);
-    editMenu->addAction(createFolder);
-
+    fileMenu->addAction(newAct);
+    editMenu->addAction(createAct);
+    editMenu->addAction(deleteAct);
 
     menuBar()->setNativeMenuBar(0);
+}
 
+
+void MainWindow::createStatusBar()
+{
     statusBar()->showMessage(tr("ready"));
+}
 
+void MainWindow::createCentralWidget()
+{
     QWidget *centerWidget = new QWidget();
     QVBoxLayout *baseLayout = new QVBoxLayout();
     QHBoxLayout *topLineLayout = new QHBoxLayout();
     QLabel *rootPathLabel = new QLabel(tr("rootPath"));
-    QLineEdit *rootPathEdit = new QLineEdit();
-    QPushButton *rootPathButton = new QPushButton(tr("..."));
+    rootPathEdit = new QLineEdit();
+    rootPathButton = new QPushButton(tr("..."));
     QComboBox *templateList = new QComboBox();
     templateList->addItem(tr("<select template>"));
+    templateList->addItem(tr("test"));
 
     QHBoxLayout *viewLayout = new QHBoxLayout();
     QHBoxLayout *buttonLayout = new QHBoxLayout();
 
 
-    TemplateView *templateView = new TemplateView();
+    templateView = new TemplateView();
     QTreeView *preView = new QTreeView();
     QSplitter *viewerSplitter = new QSplitter();
     QWidget *propertyView = new QWidget();
     QVBoxLayout *propertyLayout = new QVBoxLayout();
     QPushButton *testButton = new QPushButton();
 
-    QPushButton *makeTreeButton = new QPushButton(tr("Make"));
-    QPushButton *cancelButton = new QPushButton(tr("cancel"));
+    makeTreeButton = new QPushButton(tr("Make"));
+    cancelButton = new QPushButton(tr("cancel"));
 
     topLineLayout->addWidget(rootPathLabel);
     topLineLayout->addWidget(rootPathEdit);
@@ -86,9 +93,4 @@ void MainWindow::setWindow(QApplication *app)
 
     centerWidget->setLayout(baseLayout);
     setCentralWidget(centerWidget);
-
-    connect(cancelButton,SIGNAL(clicked()),app,SLOT(quit()));
-    connect(createFolder,SIGNAL(triggered(bool)),templateView,SLOT(insertFolder()));
-
-//    return 0;
 }
