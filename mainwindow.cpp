@@ -1,13 +1,16 @@
 #include "mainwindow.h"
+#include <QFileDialog>
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindow();
-    connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
     connect(createAct,SIGNAL(triggered(bool)),templateView,SLOT(insertFolder()));
     connect(deleteAct,SIGNAL(triggered(bool)),templateView,SLOT(deleteFolder()));
+    connect(rootPathButton,SIGNAL(clicked(bool)),this,SLOT(selectDiractory()));
+    connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
+
 }
 
 MainWindow::~MainWindow()
@@ -21,6 +24,7 @@ void MainWindow::setWindow()
     createMenu();
     createStatusBar();
     createCentralWidget();
+
 
 }
 
@@ -93,4 +97,21 @@ void MainWindow::createCentralWidget()
 
     centerWidget->setLayout(baseLayout);
     setCentralWidget(centerWidget);
+}
+
+void MainWindow::selectDiractory()
+{
+    QString folderName = QFileDialog::getExistingDirectory(this);
+    if(folderName!=""){
+        rootPathEdit->setText(folderName);
+        QDir dirName(folderName);
+        templateView->setRootFolderName(dirName.dirName());
+        rootPathEdit->setReadOnly(true);
+    }
+
+//    QPalette *palette = new QPalette();
+//    palette->setColor(QPalette::Base,Qt::gray);
+//    palette->setColor(QPalette::Text,Qt::darkGray);
+//    rootPathEdit->setPalette(*palette);
+
 }

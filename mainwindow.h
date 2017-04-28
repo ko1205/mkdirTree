@@ -30,7 +30,6 @@ private:
     void createStatusBar();
     void createCentralWidget();
 
-
     QMenu *fileMenu;
     QMenu *editMenu;
 
@@ -45,6 +44,10 @@ private:
 
     QPushButton *cancelButton;
     QPushButton *makeTreeButton;
+
+
+private slots:
+    void selectDiractory();
 
 };
 
