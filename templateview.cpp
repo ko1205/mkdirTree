@@ -217,8 +217,11 @@ void TemplateView::checkRename(const QModelIndex &index)
         QMessageBox::information(this,tr("Information"),tr("already have the same name"),QMessageBox::Yes);
     }else if(newName.contains(rx))
     {
-        templateModel->setData(index,oldName,Qt::DisplayRole);
-        QMessageBox::information(this,"","\\ / : * ? \" < > 는 사용할 수 없습니다.",QMessageBox::Yes);
+        if(parent!=rootIndex())
+       {
+            templateModel->setData(index,oldName,Qt::DisplayRole);
+            QMessageBox::information(this,"","\\ / : * ? \" < > 는 사용할 수 없습니다.",QMessageBox::Yes);
+        }
     }else
     {
         oldName = newName;

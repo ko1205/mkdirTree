@@ -42,12 +42,18 @@ private:
 
     TemplateView *templateView;
 
+
+    QPushButton *testButton;
+
     QPushButton *cancelButton;
     QPushButton *makeTreeButton;
 
 
 private slots:
     void selectDiractory();
+    void newProject();
+    void testSlot();
+
 
 };
 

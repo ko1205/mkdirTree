@@ -1,15 +1,19 @@
 #include "mainwindow.h"
 #include <QFileDialog>
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindow();
+    connect(newAct,SIGNAL(triggered(bool)),this,SLOT(newProject()));
     connect(createAct,SIGNAL(triggered(bool)),templateView,SLOT(insertFolder()));
     connect(deleteAct,SIGNAL(triggered(bool)),templateView,SLOT(deleteFolder()));
     connect(rootPathButton,SIGNAL(clicked(bool)),this,SLOT(selectDiractory()));
     connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
+
+    connect(testButton,SIGNAL(clicked(bool)),this,SLOT(testSlot()));
 
 }
 
@@ -70,7 +74,7 @@ void MainWindow::createCentralWidget()
     QSplitter *viewerSplitter = new QSplitter();
     QWidget *propertyView = new QWidget();
     QVBoxLayout *propertyLayout = new QVBoxLayout();
-    QPushButton *testButton = new QPushButton();
+    testButton = new QPushButton(tr("testButton"));
 
     makeTreeButton = new QPushButton(tr("Make"));
     cancelButton = new QPushButton(tr("cancel"));
@@ -97,6 +101,10 @@ void MainWindow::createCentralWidget()
 
     centerWidget->setLayout(baseLayout);
     setCentralWidget(centerWidget);
+
+
+    rootPathEdit->setReadOnly(true);
+
 }
 
 void MainWindow::selectDiractory()
@@ -106,7 +114,7 @@ void MainWindow::selectDiractory()
         rootPathEdit->setText(folderName);
         QDir dirName(folderName);
         templateView->setRootFolderName(dirName.dirName());
-        rootPathEdit->setReadOnly(true);
+//        rootPathEdit->setReadOnly(true);
     }
 
 //    QPalette *palette = new QPalette();
@@ -114,4 +122,33 @@ void MainWindow::selectDiractory()
 //    palette->setColor(QPalette::Text,Qt::darkGray);
 //    rootPathEdit->setPalette(*palette);
 
+}
+
+void MainWindow::newProject()
+{
+    templateView->selectAll();
+    templateView->deleteFolder();
+    rootPathEdit->setText("");
+    templateView->setRootFolderName("/");
+}
+
+void MainWindow::testSlot()
+{
+    QModelIndex index = templateView->currentIndex();
+    QString data = templateView->data(index,Qt::DisplayRole).toString();
+    QRegExp rx("\\[[a-zA-Z0-9]+\\]");
+    QStringList list =data.split(rx);
+    int pos = rx.indexIn(data);
+    QStringList pattern = rx.capturedTexts();
+    QMessageBox::information(this,"",data,QMessageBox::Yes);
+
+//    QString str = "offsets: 1.23 .50 71.00 6.00";
+//    QRegExp rx("\\d*\\.\\d+");    // primitive floating point matching
+//    int count = 0;
+//    int pos = 0;
+//    while ((pos = rx.indexIn(str, pos)) != -1) {
+//        ++count;
+//        QStringList aa = rx.capturedTexts();
+//        pos += rx.matchedLength();
+//    }
 }
