@@ -14,6 +14,7 @@
 #include <QMainWindow>
 #include <QApplication>
 #include "templateview.h"
+#include "preview.h"
 
 
 class MainWindow : public QMainWindow
@@ -41,6 +42,7 @@ private:
     QPushButton *rootPathButton;
 
     TemplateView *templateView;
+    PreView *preView;
 
 
     QPushButton *testButton;

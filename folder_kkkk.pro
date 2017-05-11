@@ -25,7 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    templateview.cpp
+    templateview.cpp \
+    preview.cpp
 
 HEADERS  += mainwindow.h \
-    templateview.h
+    templateview.h \
+    preview.h

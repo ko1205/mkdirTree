@@ -8,15 +8,17 @@
 #include <QContextMenuEvent>
 #include <QMimeData>
 
+class PreView;
 class TemplateView : public QTreeView
 {
     Q_OBJECT
 
 public:
-    TemplateView();
+    TemplateView(QWidget *parent = 0);
     ~TemplateView();
     QVariant data(const QModelIndex &index,int Role=Qt::EditRole) const;
     void contextMenuEvent(QContextMenuEvent *event) override;
+    void connectPreView(PreView *preview);
 
 
 public slots:
@@ -41,6 +43,7 @@ private:
     QIcon folderIcon;
     QString NewFolderName;
     QString oldName;
+    PreView *previewIns;
 
 private slots:
     void storOldName(const QModelIndex &index);

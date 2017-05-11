@@ -70,11 +70,16 @@ void MainWindow::createCentralWidget()
 
 
     templateView = new TemplateView();
-    QTreeView *preView = new QTreeView();
+    preView = new PreView(templateView);
+    templateView->connectPreView(preView);
     QSplitter *viewerSplitter = new QSplitter();
     QWidget *propertyView = new QWidget();
-    QVBoxLayout *propertyLayout = new QVBoxLayout();
+//    QVBoxLayout *propertyLayout = new QVBoxLayout();
+    QGridLayout *propertyLayout = new QGridLayout();
     testButton = new QPushButton(tr("testButton"));
+    QLabel *tempLabel = new QLabel("aaaa");
+    QLabel *tempRELabel = new QLabel("bbbb");
+//    QSpacerItem *spacer = new QSpacerItem(1,1);
 
     makeTreeButton = new QPushButton(tr("Make"));
     cancelButton = new QPushButton(tr("cancel"));
@@ -86,11 +91,17 @@ void MainWindow::createCentralWidget()
 
     viewerSplitter->addWidget(templateView);
     viewerSplitter->addWidget(preView);
-    viewLayout->addWidget(viewerSplitter);
+
+    propertyLayout->addWidget(testButton,0,1,Qt::AlignTop);
+    propertyLayout->addWidget(tempLabel,0,0,Qt::AlignTop);
+    propertyLayout->addWidget(tempRELabel,1,0,Qt::AlignTop);
+//    propertyLayout->addStretch();
 
     propertyView->setLayout(propertyLayout);
-    propertyLayout->addWidget(testButton);
+
+    viewLayout->addWidget(viewerSplitter);
     viewLayout->addWidget(propertyView);
+
 
     buttonLayout->addWidget(makeTreeButton);
     buttonLayout->addWidget(cancelButton);

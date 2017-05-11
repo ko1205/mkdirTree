@@ -1,8 +1,10 @@
 #include "templateview.h"
 #include <QMessageBox>
 #include <QShortcut>
+#include "preview.h"
 
-TemplateView::TemplateView()
+TemplateView::TemplateView(QWidget *parent)
+    :QTreeView(parent)
 {
 
     templateModel = new QStandardItemModel();
@@ -84,6 +86,11 @@ void TemplateView::contextMenuEvent(QContextMenuEvent *event)
     popupMenu->exec(event->globalPos());
 }
 
+void TemplateView::connectPreView(PreView *preview)
+{
+    previewIns = preview;
+}
+
 void TemplateView::insertFolder()
 {
     NewFolderName = QString(tr("NewFolder"));
@@ -106,6 +113,7 @@ void TemplateView::insertFolder()
     }else{
         templateModel->itemFromIndex(index)->appendRow(newFolder);
     }
+    previewIns->updatePreVew();
 }
 
 void TemplateView::deleteFolder()
@@ -141,11 +149,15 @@ void TemplateView::deleteFolder()
         int row = deleteIndex.row();
         templateModel->removeRow(row,parent);
     }
+    previewIns->updatePreVew();
+
 }
 
 void TemplateView::setRootFolderName(const QString &rootName)
 {
     rootItem->setData(rootName,Qt::DisplayRole);
+    previewIns->updatePreVew();
+
 }
 
 bool TemplateView::hasSameName(QString folderName,QModelIndex &parent)
@@ -226,6 +238,9 @@ void TemplateView::checkRename(const QModelIndex &index)
     {
         oldName = newName;
     }
+    previewIns->updatePreVew();
+
+//    QMessageBox::information(this,"","testABCDEFG",QMessageBox::Yes);
 }
 
 
