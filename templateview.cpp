@@ -51,6 +51,7 @@ TemplateView::TemplateView(QWidget *parent)
     connect(deleteKey,SIGNAL(activated()),this,SLOT(deleteFolder()));
     connect(templateModel,SIGNAL(rowsInserted(QModelIndex,int,int)),this,SLOT(activeStor(QModelIndex,int ,int)));
     connect(this,SIGNAL(clicked(QModelIndex)),this,SLOT(testClicked(QModelIndex)));
+    connect(templateModel,SIGNAL(rowsRemoved(QModelIndex,int,int)),this,SLOT(rowRemovedModel()));
 }
 
 TemplateView::~TemplateView()
@@ -248,6 +249,12 @@ void TemplateView::testClicked(const QModelIndex &index)
 {
 //    QMessageBox::information(this,"","Click_TEST",QMessageBox::Yes);
     expandAll();
+}
+
+void TemplateView::rowRemovedModel()
+{
+    previewIns->updatePreVew();
+//    QMessageBox::information(this,"","test",QMessageBox::Yes);
 }
 
 void TemplateView::activeStor(const QModelIndex &index,int start,int end)

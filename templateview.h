@@ -50,6 +50,7 @@ private slots:
     void checkRename(const QModelIndex &index);
     void activeStor(const QModelIndex &index,int start,int end);
     void testClicked(const QModelIndex &index);
+    void rowRemovedModel();
 
 protected:
     void dropEvent(QDropEvent *event) override;
