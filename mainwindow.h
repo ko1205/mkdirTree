@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QTreeView>
+//#include <QTreeView>
 #include <QSplitter>
 #include <QComboBox>
 #include <QStatusBar>
