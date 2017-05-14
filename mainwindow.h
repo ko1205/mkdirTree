@@ -27,7 +27,8 @@ public:
 
 private:
     void setWindow();
-    void createMenu();
+    void createActions();
+    void createMenus();
     void createStatusBar();
     void createCentralWidget();
 
@@ -54,6 +55,8 @@ private:
 private slots:
     void selectDiractory();
     void newProject();
+    void createFolder();
+    void deleteFolder();
     void testSlot();
 
 

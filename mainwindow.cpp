@@ -7,9 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindow();
-    connect(newAct,SIGNAL(triggered(bool)),this,SLOT(newProject()));
-    connect(createAct,SIGNAL(triggered(bool)),templateView,SLOT(insertFolder()));
-    connect(deleteAct,SIGNAL(triggered(bool)),templateView,SLOT(deleteFolder()));
+
     connect(rootPathButton,SIGNAL(clicked(bool)),this,SLOT(selectDiractory()));
     connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
 
@@ -24,23 +22,31 @@ MainWindow::~MainWindow()
 
 void MainWindow::setWindow()
 {
-
-    createMenu();
+    createActions();
+    createMenus();
     createStatusBar();
     createCentralWidget();
-
-
 }
 
-void MainWindow::createMenu()
+void MainWindow::createActions()
 {
     newAct = new QAction(tr("&New project"),this);
-    createAct = new QAction(tr("createFolder"),this);
-    deleteAct = new QAction(tr("deleteFolder"),this);
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    editMenu = menuBar()->addMenu(tr("&Edit"));
+    connect(newAct,SIGNAL(triggered(bool)),this,SLOT(newProject()));
 
+    createAct = new QAction(tr("createFolder"),this);
+    connect(createAct,SIGNAL(triggered(bool)),this,SLOT(createFolder()));
+
+    deleteAct = new QAction(tr("deleteFolder"),this);
+    connect(deleteAct,SIGNAL(triggered(bool)),this,SLOT(deleteFolder()));
+}
+
+void MainWindow::createMenus()
+{
+
+    fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newAct);
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(createAct);
     editMenu->addAction(deleteAct);
 
@@ -58,6 +64,7 @@ void MainWindow::createCentralWidget()
     QWidget *centerWidget = new QWidget();
     QVBoxLayout *baseLayout = new QVBoxLayout();
     QHBoxLayout *topLineLayout = new QHBoxLayout();
+
     QLabel *rootPathLabel = new QLabel(tr("rootPath"));
     rootPathEdit = new QLineEdit();
     rootPathButton = new QPushButton(tr("..."));
@@ -141,6 +148,16 @@ void MainWindow::newProject()
     templateView->deleteFolder();
     rootPathEdit->setText("");
     templateView->setRootFolderName("/");
+}
+
+void MainWindow::createFolder()
+{
+    templateView->insertFolder();
+}
+
+void MainWindow::deleteFolder()
+{
+    templateView->deleteFolder();
 }
 
 void MainWindow::testSlot()
