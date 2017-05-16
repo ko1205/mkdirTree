@@ -26,8 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     templateview.cpp \
-    preview.cpp
+    preview.cpp \
+    propertyview.cpp
 
 HEADERS  += mainwindow.h \
     templateview.h \
-    preview.h
+    preview.h \
+    propertyview.h

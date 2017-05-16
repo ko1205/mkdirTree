@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(rootPathButton,SIGNAL(clicked(bool)),this,SLOT(selectDiractory()));
     connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
 
-    connect(testButton,SIGNAL(clicked(bool)),this,SLOT(testSlot()));
+//    connect(testButton,SIGNAL(clicked(bool)),this,SLOT(testSlot()));
 
 }
 
@@ -80,13 +80,7 @@ void MainWindow::createCentralWidget()
     preView = new PreView(templateView);
     templateView->connectPreView(preView);
     QSplitter *viewerSplitter = new QSplitter();
-    QWidget *propertyView = new QWidget();
-//    QVBoxLayout *propertyLayout = new QVBoxLayout();
-    QGridLayout *propertyLayout = new QGridLayout();
-    testButton = new QPushButton(tr("testButton"));
-    QLabel *tempLabel = new QLabel("aaaa");
-    QLabel *tempRELabel = new QLabel("bbbb");
-//    QSpacerItem *spacer = new QSpacerItem(1,1);
+    propertyView = new PropertyView();
 
     makeTreeButton = new QPushButton(tr("Make"));
     cancelButton = new QPushButton(tr("cancel"));
@@ -98,13 +92,6 @@ void MainWindow::createCentralWidget()
 
     viewerSplitter->addWidget(templateView);
     viewerSplitter->addWidget(preView);
-
-    propertyLayout->addWidget(testButton,0,1,Qt::AlignTop);
-    propertyLayout->addWidget(tempLabel,0,0,Qt::AlignTop);
-    propertyLayout->addWidget(tempRELabel,1,0,Qt::AlignTop);
-//    propertyLayout->addStretch();
-
-    propertyView->setLayout(propertyLayout);
 
     viewLayout->addWidget(viewerSplitter);
     viewLayout->addWidget(propertyView);

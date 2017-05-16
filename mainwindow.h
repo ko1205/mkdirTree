@@ -7,7 +7,6 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-//#include <QTreeView>
 #include <QSplitter>
 #include <QComboBox>
 #include <QStatusBar>
@@ -15,6 +14,7 @@
 #include <QApplication>
 #include "templateview.h"
 #include "preview.h"
+#include "propertyview.h"
 
 
 class MainWindow : public QMainWindow
@@ -44,9 +44,7 @@ private:
 
     TemplateView *templateView;
     PreView *preView;
-
-
-    QPushButton *testButton;
+    PropertyView *propertyView;
 
     QPushButton *cancelButton;
     QPushButton *makeTreeButton;
