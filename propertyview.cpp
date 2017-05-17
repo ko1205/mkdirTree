@@ -5,6 +5,7 @@
 PropertyView::PropertyView(QWidget *parent) : QWidget(parent)
 {
     createForm();
+    connect(folderNameEdit,SIGNAL(textChanged(QString)),this,SLOT(checkFolderName(QString)));
 }
 
 PropertyView::~PropertyView()
@@ -58,4 +59,14 @@ void PropertyView::createForm()
 
     setLayout(baseLayout);
     setMaximumWidth(this->sizeHint().width());
+}
+
+void PropertyView::setCurrentIndex(QModelIndex *index)
+{
+    currentIndex = index;
+}
+
+void PropertyView::checkFolderName(QString folderName)
+{
+
 }

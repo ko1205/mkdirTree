@@ -6,6 +6,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 
+
 class PropertyView : public QWidget
 {
     Q_OBJECT
@@ -29,6 +30,12 @@ public slots:
 
 private:
     void createForm();
+    void setCurrentIndex(QModelIndex *index);
+
+    QModelIndex *currentIndex;
+
+private slots:
+    void checkFolderName(QString folderName);
 };
 
 #endif // PROPERTYVIEW_H
