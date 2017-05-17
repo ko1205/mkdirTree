@@ -1,6 +1,7 @@
 #include "propertyview.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QMessageBox>
 
 PropertyView::PropertyView(QWidget *parent) : QWidget(parent)
 {
@@ -61,9 +62,31 @@ void PropertyView::createForm()
     setMaximumWidth(this->sizeHint().width());
 }
 
-void PropertyView::setCurrentIndex(QModelIndex *index)
+void PropertyView::resetNumValue()
 {
-    currentIndex = index;
+    startNumEdit->setValue(0);
+    startNumEdit->setEnabled(false);
+
+    countNumEdit->setValue(0);
+    countNumEdit->setEnabled(false);
+
+    stepNumEdit->setValue(0);
+    stepNumEdit->setEnabled(false);
+}
+
+void PropertyView::setCurrentItem(QStandardItem *item)
+{
+    currentItem = item;
+    QString data = item->data(Qt::DisplayRole).toString();
+    folderNameEdit->setText(data);
+//    folderNameEdit->setEnabled(true);
+//    QMessageBox::information(this,"",data,QMessageBox::Yes);
+}
+
+void PropertyView::resetAllData()
+{
+    folderNameEdit->setText("");
+    resetNumValue();
 }
 
 void PropertyView::checkFolderName(QString folderName)

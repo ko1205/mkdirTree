@@ -50,7 +50,7 @@ TemplateView::TemplateView(QWidget *parent)
     connect(deleteAct,SIGNAL(triggered(bool)),this,SLOT(deleteFolder()));
     connect(deleteKey,SIGNAL(activated()),this,SLOT(deleteFolder()));
     connect(templateModel,SIGNAL(rowsInserted(QModelIndex,int,int)),this,SLOT(activeStor(QModelIndex,int ,int)));
-    connect(this,SIGNAL(clicked(QModelIndex)),this,SLOT(testClicked(QModelIndex)));
+    connect(this,SIGNAL(clicked(QModelIndex)),this,SLOT(itemClicked(QModelIndex)));
     connect(templateModel,SIGNAL(rowsRemoved(QModelIndex,int,int)),this,SLOT(rowRemovedModel()));
 }
 
@@ -150,7 +150,8 @@ void TemplateView::deleteFolder()
         int row = deleteIndex.row();
         templateModel->removeRow(row,parent);
     }
-    previewIns->updatePreVew();
+    emit itemDeleted();
+//    previewIns->updatePreVew();
 
 }
 
@@ -240,15 +241,24 @@ void TemplateView::checkRename(const QModelIndex &index)
         oldName = newName;
     }
     previewIns->updatePreVew();
+    if(parent!=rootIndex())
+    {
+        emit itemClickedView(templateModel->itemFromIndex(index));
+    }
 
 //    QMessageBox::information(this,"","testABCDEFG",QMessageBox::Yes);
 }
 
 
-void TemplateView::testClicked(const QModelIndex &index)
+void TemplateView::itemClicked(const QModelIndex &index)
 {
-//    QMessageBox::information(this,"","Click_TEST",QMessageBox::Yes);
-    expandAll();
+    QStandardItem *item;
+
+    item = templateModel->itemFromIndex(index);
+    if(item!=rootItem)
+    {
+        emit itemClickedView(item);
+    }
 }
 
 void TemplateView::rowRemovedModel()

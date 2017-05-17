@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     setWindow();
 
     connect(rootPathButton,SIGNAL(clicked(bool)),this,SLOT(selectDiractory()));
+    connect(templateView,SIGNAL(itemClickedView(QStandardItem*)),propertyView,SLOT(setCurrentItem(QStandardItem*)));
+    connect(templateView,SIGNAL(itemDeleted()),propertyView,SLOT(resetAllData()));
     connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
 
 //    connect(testButton,SIGNAL(clicked(bool)),this,SLOT(testSlot()));

@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QLineEdit>
+#include <QStandardItem>
 
 
 class PropertyView : public QWidget
@@ -27,12 +28,14 @@ public:
 signals:
 
 public slots:
+    void setCurrentItem(QStandardItem *item);
+    void resetAllData();
 
 private:
     void createForm();
-    void setCurrentIndex(QModelIndex *index);
+    void resetNumValue();
 
-    QModelIndex *currentIndex;
+    QStandardItem *currentItem;
 
 private slots:
     void checkFolderName(QString folderName);
