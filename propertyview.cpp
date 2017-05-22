@@ -85,6 +85,7 @@ void PropertyView::setCurrentItem(QStandardItem *item)
 
 void PropertyView::resetAllData()
 {
+    currentItem = NULL;
     folderNameEdit->setText("");
     resetNumValue();
 }
