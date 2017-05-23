@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "common.h"
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -168,7 +169,11 @@ void MainWindow::testSlot()
     QStringList list =data.split(rx);
     int pos = rx.indexIn(data);
     QStringList pattern = rx.capturedTexts();
-    QMessageBox::information(this,"",data,QMessageBox::Yes);
+
+    if(isSequencName(data))
+    {
+        QMessageBox::information(this,"",data,QMessageBox::Yes);
+    }
 
 //    QString str = "offsets: 1.23 .50 71.00 6.00";
 //    QRegExp rx("\\d*\\.\\d+");    // primitive floating point matching
