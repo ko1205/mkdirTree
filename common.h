@@ -3,6 +3,6 @@
 
 #include <QString>
 
-bool isSequencName(QString folderName);
+QStringList isSequencName(QString folderName);
 
 #endif // COMMON_H

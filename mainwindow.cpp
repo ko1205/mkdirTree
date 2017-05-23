@@ -170,7 +170,7 @@ void MainWindow::testSlot()
     int pos = rx.indexIn(data);
     QStringList pattern = rx.capturedTexts();
 
-    if(isSequencName(data))
+    if(isSequencName(data).count()!=0)
     {
         QMessageBox::information(this,"",data,QMessageBox::Yes);
     }
