@@ -27,9 +27,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     templateview.cpp \
     preview.cpp \
-    propertyview.cpp
+    propertyview.cpp\
+    common.cpp
 
 HEADERS  += mainwindow.h \
     templateview.h \
     preview.h \
-    propertyview.h
+    propertyview.h\
+    common.h
