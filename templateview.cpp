@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QShortcut>
 #include "preview.h"
+#include "common.h"
 
 TemplateView::TemplateView(QWidget *parent)
     :QTreeView(parent)
@@ -172,7 +173,14 @@ bool TemplateView::hasSameName(QString folderName,QModelIndex &parent)
     {
         childIndex = templateModel->index(i,0,parent);
         data = templateModel->data(childIndex,Qt::DisplayRole).toString();
-        if(folderName.toUpper() == data.toUpper())
+        if((isSequencName(folderName).count()!=0) && (isSequencName(data).count()!=0))
+        {
+            if((isSequencName(folderName)[0].toUpper()==isSequencName(data)[0].toUpper()) &&\
+                (isSequencName(folderName)[2].toUpper()==isSequencName(data)[2].toUpper()))
+            {
+                isSameNam = true;
+            }
+        }else if(folderName.toUpper() == data.toUpper())
         {
             isSameNam = true;
         }
@@ -191,7 +199,18 @@ bool TemplateView::hasSameName(const QModelIndex &index,QString folderName,QMode
     {
         childIndex = templateModel->index(i,0,parent);
         QString data = templateModel->data(childIndex,Qt::DisplayRole).toString();
-        if(folderName.toUpper() == data.toUpper())
+        if((isSequencName(folderName).count()!=0) && (isSequencName(data).count()!=0))
+        {
+            if((isSequencName(folderName)[0].toUpper()==isSequencName(data)[0].toUpper()) &&\
+                (isSequencName(folderName)[2].toUpper()==isSequencName(data)[2].toUpper()))
+            {
+                if(index.row()!=i)
+                {
+                    isSameNam = true;
+                }
+            }
+
+        }else if(folderName.toUpper() == data.toUpper())
         {
             if(index.row()!=i)
             {
@@ -224,6 +243,7 @@ void TemplateView::checkRename(const QModelIndex &index)
     QModelIndex parent = templateModel->parent(index);
     QString newName = templateModel->data(index,Qt::DisplayRole).toString();
     QRegExp rx = QRegExp("[\\\\ \\/ \\: \? \" \\* \\< \\> \\|]");
+    QStringList sequenceNames;
 
     if(hasSameName(index,newName,parent))
     {
@@ -239,6 +259,13 @@ void TemplateView::checkRename(const QModelIndex &index)
     }else
     {
         oldName = newName;
+    }
+    sequenceNames = isSequencName(newName,true);
+    if(sequenceNames.count()!=0)
+    {
+        templateModel->setData(index,0,Qt::UserRole+1);
+        templateModel->setData(index,1,Qt::UserRole+2);
+        templateModel->setData(index,1,Qt::UserRole+3);
     }
     previewIns->updatePreVew();
     if(parent!=rootIndex())
@@ -279,6 +306,8 @@ void TemplateView::activeStor(const QModelIndex &index,int start,int end)
 void TemplateView::dropEvent(QDropEvent *event)
 {
     QModelIndexList selectList = selectedIndexes();
+    QString compare;
+    QString compareTo;
 
     //////////////////////////////////////////////////////////////////
     /// \brief index
@@ -304,8 +333,18 @@ void TemplateView::dropEvent(QDropEvent *event)
             {
                 if(index!=selectList[i])
                 {
-                    if(templateModel->data(index,Qt::DisplayRole).toString().toUpper()==\
-                            templateModel->data(selectList[i],Qt::DisplayRole).toString().toUpper())
+                    compare = templateModel->data(index,Qt::DisplayRole).toString().toUpper();
+                    compareTo = templateModel->data(selectList[i],Qt::DisplayRole).toString().toUpper();
+                    if((isSequencName(compare).count()!=0) && (isSequencName(compareTo).count()!=0))
+                    {
+                        if((isSequencName(compare)[0].toUpper()==isSequencName(compareTo)[0].toUpper()) &&\
+                            (isSequencName(compare)[2].toUpper()==isSequencName(compareTo)[2].toUpper()))
+                        {
+                            QMessageBox::information(this,tr("Information"),tr("selected Folder have same name"),QMessageBox::Yes);
+                            return;
+                        }
+
+                    }else if(compare==compareTo)
                     {
                         QMessageBox::information(this,tr("Information"),tr("selected Folder have same name"),QMessageBox::Yes);
                         return;

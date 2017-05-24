@@ -3,7 +3,7 @@
 #include <QStringList>
 #include <QMessageBox>
 
-QStringList isSequencName(QString folderName)
+QStringList isSequencName(QString folderName,bool showMessage)
 {
     QRegExp rx("#+");
     int pos = rx.indexIn(folderName);
@@ -12,7 +12,10 @@ QStringList isSequencName(QString folderName)
     {
         if(list.count()!=2)
         {
-            QMessageBox::information(NULL,"","Invalid sequence name",QMessageBox::Yes);
+            if(showMessage)
+            {
+                QMessageBox::information(NULL,"","Invalid sequence name",QMessageBox::Yes);
+            }
             list.clear();
             return list;
         }else{

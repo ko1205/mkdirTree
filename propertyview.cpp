@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMessageBox>
+#include "common.h"
 
 PropertyView::PropertyView(QWidget *parent) : QWidget(parent)
 {
@@ -27,17 +28,17 @@ void PropertyView::createForm()
 
     startNumLabel = new QLabel("Start");
     startNumEdit = new QSpinBox();
-    startNumEdit->setMaximum(999999);
+    startNumEdit->setRange(0,999999);
     startNumEdit->setEnabled(false);
 
     countNumLabel = new QLabel("Count");
     countNumEdit = new QSpinBox();
-    countNumEdit->setMaximum(999999);
+    countNumEdit->setRange(1,999999);
     countNumEdit->setEnabled(false);
 
     stepNumLabel = new QLabel("Step");
     stepNumEdit = new QSpinBox();
-    stepNumEdit->setMaximum(999999);
+    stepNumEdit->setRange(1,999999);
     stepNumEdit->setEnabled(false);
 
     folderNameLayout->addWidget(folderNameLabel);
@@ -79,6 +80,20 @@ void PropertyView::setCurrentItem(QStandardItem *item)
     currentItem = item;
     QString data = item->data(Qt::DisplayRole).toString();
     folderNameEdit->setText(data);
+    if(isSequencName(data).count()!=0)
+    {
+        startNumEdit->setValue(item->data(Qt::UserRole+1).toInt());
+        startNumEdit->setEnabled(true);
+
+        countNumEdit->setValue(item->data(Qt::UserRole+2).toInt());
+        countNumEdit->setEnabled(true);
+
+        stepNumEdit->setValue(item->data(Qt::UserRole+3).toInt());
+        stepNumEdit->setEnabled(true);
+
+    }else{
+        resetNumValue();
+    }
 //    folderNameEdit->setEnabled(true);
 //    QMessageBox::information(this,"",data,QMessageBox::Yes);
 }
