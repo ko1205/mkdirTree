@@ -38,6 +38,9 @@ private:
     QStandardItem *currentItem;
 
 private slots:
+    void setStart(int value);
+    void setCount(int value);
+    void setStep(int value);
     void checkFolderName(QString folderName);
 };
 

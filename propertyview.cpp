@@ -7,6 +7,9 @@
 PropertyView::PropertyView(QWidget *parent) : QWidget(parent)
 {
     createForm();
+    connect(startNumEdit,SIGNAL(valueChanged(int)),this,SLOT(setStart(int)));
+    connect(countNumEdit,SIGNAL(valueChanged(int)),this,SLOT(setCount(int)));
+    connect(stepNumEdit,SIGNAL(valueChanged(int)),this,SLOT(setStep(int)));
     connect(folderNameEdit,SIGNAL(textChanged(QString)),this,SLOT(checkFolderName(QString)));
 }
 
@@ -33,12 +36,12 @@ void PropertyView::createForm()
 
     countNumLabel = new QLabel("Count");
     countNumEdit = new QSpinBox();
-    countNumEdit->setRange(1,999999);
+    countNumEdit->setRange(0,999999);
     countNumEdit->setEnabled(false);
 
     stepNumLabel = new QLabel("Step");
     stepNumEdit = new QSpinBox();
-    stepNumEdit->setRange(1,999999);
+    stepNumEdit->setRange(0,999999);
     stepNumEdit->setEnabled(false);
 
     folderNameLayout->addWidget(folderNameLabel);
@@ -65,12 +68,15 @@ void PropertyView::createForm()
 
 void PropertyView::resetNumValue()
 {
+    startNumEdit->setRange(0,999999);
     startNumEdit->setValue(0);
     startNumEdit->setEnabled(false);
 
+    countNumEdit->setRange(0,999999);
     countNumEdit->setValue(0);
     countNumEdit->setEnabled(false);
 
+    stepNumEdit->setRange(0,999999);
     stepNumEdit->setValue(0);
     stepNumEdit->setEnabled(false);
 }
@@ -84,12 +90,15 @@ void PropertyView::setCurrentItem(QStandardItem *item)
     {
         startNumEdit->setValue(item->data(Qt::UserRole+1).toInt());
         startNumEdit->setEnabled(true);
+        startNumEdit->setRange(0,999999);
 
         countNumEdit->setValue(item->data(Qt::UserRole+2).toInt());
         countNumEdit->setEnabled(true);
+        countNumEdit->setRange(1,999999);
 
         stepNumEdit->setValue(item->data(Qt::UserRole+3).toInt());
         stepNumEdit->setEnabled(true);
+        stepNumEdit->setRange(1,999999);
 
     }else{
         resetNumValue();
@@ -103,6 +112,36 @@ void PropertyView::resetAllData()
     currentItem = NULL;
     folderNameEdit->setText("");
     resetNumValue();
+}
+
+void PropertyView::setStart(int value)
+{
+    QString currentName=currentItem->data(Qt::DisplayRole).toString();
+    if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+1).toInt()!=value))
+    {
+        currentItem->setData(value,Qt::UserRole+1);
+
+    }
+}
+
+void PropertyView::setCount(int value)
+{
+    QString currentName=currentItem->data(Qt::DisplayRole).toString();
+    if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+2).toInt()!=value))
+    {
+        currentItem->setData(value,Qt::UserRole+2);
+
+    }
+}
+
+void PropertyView::setStep(int value)
+{
+    QString currentName=currentItem->data(Qt::DisplayRole).toString();
+    if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+3).toInt()!=value))
+    {
+        currentItem->setData(value,Qt::UserRole+3);
+
+    }
 }
 
 void PropertyView::checkFolderName(QString folderName)

@@ -98,6 +98,7 @@ void TemplateView::insertFolder()
     NewFolderName = QString(tr("NewFolder"));
     QStandardItem *newFolder = new QStandardItem(NewFolderName);
     newFolder->setIcon(folderIcon);
+    newFolder->setData(false,Qt::UserRole);
     QModelIndex index= currentIndex();
     if(index==rootIndex() || !index.isValid())
     {
@@ -245,6 +246,8 @@ void TemplateView::checkRename(const QModelIndex &index)
     QRegExp rx = QRegExp("[\\\\ \\/ \\: \? \" \\* \\< \\> \\|]");
     QStringList sequenceNames;
 
+    disconnect(templateModel,SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),this,SLOT(checkRename(QModelIndex)));
+
     if(hasSameName(index,newName,parent))
     {
         templateModel->setData(index,oldName,Qt::DisplayRole);
@@ -263,15 +266,26 @@ void TemplateView::checkRename(const QModelIndex &index)
     sequenceNames = isSequencName(newName,true);
     if(sequenceNames.count()!=0)
     {
+        if(!(templateModel->data(index,Qt::UserRole).toBool()))
+        {
+            templateModel->setData(index,true,Qt::UserRole);
+            templateModel->setData(index,0,Qt::UserRole+1);
+            templateModel->setData(index,1,Qt::UserRole+2);
+            templateModel->setData(index,1,Qt::UserRole+3);
+        }
+    }else{
+        templateModel->setData(index,false,Qt::UserRole);
         templateModel->setData(index,0,Qt::UserRole+1);
-        templateModel->setData(index,1,Qt::UserRole+2);
-        templateModel->setData(index,1,Qt::UserRole+3);
+        templateModel->setData(index,0,Qt::UserRole+2);
+        templateModel->setData(index,0,Qt::UserRole+3);
     }
+
     previewIns->updatePreVew();
     if(parent!=rootIndex())
     {
         emit itemClickedView(templateModel->itemFromIndex(index));
     }
+    connect(templateModel,SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),this,SLOT(checkRename(QModelIndex)));
 
 //    QMessageBox::information(this,"","testABCDEFG",QMessageBox::Yes);
 }
