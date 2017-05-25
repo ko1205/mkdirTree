@@ -36,6 +36,10 @@ private:
     QMenu *editMenu;
 
     QAction *newAct;
+    QAction *saveTemplateAct;
+    QAction *deleteTemplateAct;
+    QAction *exportTemplateAct;
+    QAction *importTemplateAct;
     QAction *createAct;
     QAction *deleteAct;
 

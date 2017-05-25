@@ -36,6 +36,14 @@ void MainWindow::createActions()
     newAct = new QAction(tr("&New project"),this);
     connect(newAct,SIGNAL(triggered(bool)),this,SLOT(newProject()));
 
+    saveTemplateAct = new QAction(tr("Save Template"));
+
+    deleteTemplateAct = new QAction(tr("delete Template"));
+
+    exportTemplateAct = new QAction(tr("export Template"));
+
+    importTemplateAct = new QAction(tr("import Template"));
+
     createAct = new QAction(tr("createFolder"),this);
     connect(createAct,SIGNAL(triggered(bool)),this,SLOT(createFolder()));
 
@@ -48,6 +56,12 @@ void MainWindow::createMenus()
 
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(saveTemplateAct);
+    fileMenu->addAction(deleteTemplateAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(exportTemplateAct);
+    fileMenu->addAction(importTemplateAct);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(createAct);
