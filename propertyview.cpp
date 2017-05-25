@@ -116,31 +116,37 @@ void PropertyView::resetAllData()
 
 void PropertyView::setStart(int value)
 {
-    QString currentName=currentItem->data(Qt::DisplayRole).toString();
-    if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+1).toInt()!=value))
-    {
-        currentItem->setData(value,Qt::UserRole+1);
+    if(currentItem!=NULL){
+        QString currentName=currentItem->data(Qt::DisplayRole).toString();
+        if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+1).toInt()!=value))
+        {
+            currentItem->setData(value,Qt::UserRole+1);
 
+        }
     }
 }
 
 void PropertyView::setCount(int value)
 {
-    QString currentName=currentItem->data(Qt::DisplayRole).toString();
-    if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+2).toInt()!=value))
-    {
-        currentItem->setData(value,Qt::UserRole+2);
+    if(currentItem!=NULL){
+        QString currentName=currentItem->data(Qt::DisplayRole).toString();
+        if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+2).toInt()!=value))
+        {
+            currentItem->setData(value,Qt::UserRole+2);
 
+        }
     }
 }
 
 void PropertyView::setStep(int value)
 {
-    QString currentName=currentItem->data(Qt::DisplayRole).toString();
-    if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+3).toInt()!=value))
-    {
-        currentItem->setData(value,Qt::UserRole+3);
+    if(currentItem!=NULL){
+        QString currentName=currentItem->data(Qt::DisplayRole).toString();
+        if((isSequencName(currentName).count()!=0) && (currentItem->data(Qt::UserRole+3).toInt()!=value))
+        {
+            currentItem->setData(value,Qt::UserRole+3);
 
+        }
     }
 }
 
