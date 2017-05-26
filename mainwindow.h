@@ -46,6 +46,8 @@ private:
     QLineEdit *rootPathEdit;
     QPushButton *rootPathButton;
 
+    QComboBox *templateList;
+
     TemplateView *templateView;
     PreView *preView;
     PropertyView *propertyView;
@@ -57,6 +59,7 @@ private:
 private slots:
     void selectDiractory();
     void newProject();
+    void saveTemplate();
     void createFolder();
     void deleteFolder();
     void testSlot();

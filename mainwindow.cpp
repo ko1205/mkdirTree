@@ -2,6 +2,7 @@
 #include "common.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QInputDialog>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -37,6 +38,7 @@ void MainWindow::createActions()
     connect(newAct,SIGNAL(triggered(bool)),this,SLOT(newProject()));
 
     saveTemplateAct = new QAction(tr("Save Template"));
+    connect(saveTemplateAct,SIGNAL(triggered(bool)),SLOT(saveTemplate()));
 
     deleteTemplateAct = new QAction(tr("delete Template"));
 
@@ -85,9 +87,8 @@ void MainWindow::createCentralWidget()
     QLabel *rootPathLabel = new QLabel(tr("rootPath"));
     rootPathEdit = new QLineEdit();
     rootPathButton = new QPushButton(tr("..."));
-    QComboBox *templateList = new QComboBox();
+    templateList = new QComboBox();
     templateList->addItem(tr("<select template>"));
-    templateList->addItem(tr("test"));
 
     QHBoxLayout *viewLayout = new QHBoxLayout();
     QHBoxLayout *buttonLayout = new QHBoxLayout();
@@ -152,6 +153,24 @@ void MainWindow::newProject()
     templateView->deleteFolder();
     rootPathEdit->setText("");
     templateView->setRootFolderName("/");
+}
+
+void MainWindow::saveTemplate()
+{
+    bool ok;
+    int templatNameIndex;
+    QString templateName = QInputDialog::getText(this,"Save Template","TemplateName",QLineEdit::Normal,"template",&ok);
+     if (ok && !templateName.isEmpty())
+     {
+         if(templateList->findText(templateName)==-1)
+         {
+         templateList->addItem(templateName);
+         int item =templateList->findData(templateName,Qt::DisplayRole);
+         templateList->setCurrentIndex(item);
+         }else{
+             QMessageBox::information(this,"","already have the same template name",QMessageBox::Yes);
+         }
+     }
 }
 
 void MainWindow::createFolder()
