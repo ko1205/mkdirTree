@@ -15,7 +15,7 @@
 #include "templateview.h"
 #include "preview.h"
 #include "propertyview.h"
-
+#include "templatecontrol.h"
 
 class MainWindow : public QMainWindow
 {
@@ -54,6 +54,8 @@ private:
 
     QPushButton *cancelButton;
     QPushButton *makeTreeButton;
+
+    TemplateControl *templateControl;
 
 
 private slots:

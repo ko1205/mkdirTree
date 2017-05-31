@@ -93,6 +93,21 @@ void TemplateView::connectPreView(PreView *preview)
     previewIns = preview;
 }
 
+QStandardItem *TemplateView::root()
+{
+    return rootItem;
+}
+
+QIcon TemplateView::icon()
+{
+    return folderIcon;
+}
+
+void TemplateView::previewUpdate()
+{
+    previewIns->updatePreVew();
+}
+
 void TemplateView::insertFolder()
 {
     NewFolderName = QString(tr("NewFolder"));

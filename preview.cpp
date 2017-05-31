@@ -92,5 +92,5 @@ QStandardItem * PreView::readModelLoop(QModelIndex &index,QStandardItem *parentI
         }
         return item;
     }
-    return item;
+    return NULL;
 }

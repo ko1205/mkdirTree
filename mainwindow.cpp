@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindow();
 
     connect(rootPathButton,SIGNAL(clicked(bool)),this,SLOT(selectDiractory()));
+    connect(templateList,SIGNAL(currentIndexChanged(QString)),templateControl,SLOT(loadTemplate(QString)));
     connect(templateView,SIGNAL(itemClickedView(QStandardItem*)),propertyView,SLOT(setCurrentItem(QStandardItem*)));
     connect(templateView,SIGNAL(itemDeleted()),propertyView,SLOT(resetAllData()));
     connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
@@ -100,6 +101,11 @@ void MainWindow::createCentralWidget()
     QSplitter *viewerSplitter = new QSplitter();
     propertyView = new PropertyView();
 
+    templateControl = new TemplateControl(templateView);
+    templateList->addItems(templateControl->readTemplateList());
+    templateControl->setFolderIcon(templateView->icon());
+
+
     makeTreeButton = new QPushButton(tr("Make"));
     cancelButton = new QPushButton(tr("cancel"));
 
@@ -158,15 +164,23 @@ void MainWindow::newProject()
 void MainWindow::saveTemplate()
 {
     bool ok;
-    int templatNameIndex;
+    int templateNameIndex;
     QString templateName = QInputDialog::getText(this,"Save Template","TemplateName",QLineEdit::Normal,"template",&ok);
      if (ok && !templateName.isEmpty())
      {
          if(templateList->findText(templateName)==-1)
          {
-         templateList->addItem(templateName);
-         int item =templateList->findData(templateName,Qt::DisplayRole);
-         templateList->setCurrentIndex(item);
+             disconnect(templateList,SIGNAL(currentIndexChanged(QString)),templateControl,SLOT(loadTemplate(QString)));
+             if(templateControl->saveTemplate(templateName))
+             {
+                 templateList->addItem(templateName);
+                 templateNameIndex = templateList->findData(templateName,Qt::DisplayRole);
+                 templateList->setCurrentIndex(templateNameIndex);
+ //                templateControl = new TemplateControl(this);
+             }else{
+                 QMessageBox::information(this,"","Save fales",QMessageBox::Yes);
+             }
+             connect(templateList,SIGNAL(currentIndexChanged(QString)),templateControl,SLOT(loadTemplate(QString)));
          }else{
              QMessageBox::information(this,"","already have the same template name",QMessageBox::Yes);
          }

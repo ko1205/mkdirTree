@@ -19,6 +19,9 @@ public:
     QVariant data(const QModelIndex &index,int Role=Qt::EditRole) const;
     void contextMenuEvent(QContextMenuEvent *event) override;
     void connectPreView(PreView *preview);
+    QStandardItem *root();
+    QIcon icon();
+    void previewUpdate();
 
 signals:
     void itemClickedView(QStandardItem *item);

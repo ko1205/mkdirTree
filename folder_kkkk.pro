@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,10 +28,12 @@ SOURCES += main.cpp\
     templateview.cpp \
     preview.cpp \
     propertyview.cpp\
-    common.cpp
+    common.cpp \
+    templatecontrol.cpp
 
 HEADERS  += mainwindow.h \
     templateview.h \
     preview.h \
     propertyview.h\
-    common.h
+    common.h \
+    templatecontrol.h
