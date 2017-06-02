@@ -22,6 +22,7 @@ signals:
 
 public slots:
     void loadTemplate(QString templateName);
+    void deleteTemplate(QString templateName);
 
 private:
     void readTemplateViewLoop(QDomElement &templateElement,QModelIndex &index);

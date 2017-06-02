@@ -4,6 +4,46 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
+DeleteTemplateDialog::DeleteTemplateDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    templateList = new QListWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout();
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    deleteButton = new QPushButton("Delete");
+    cancelButton = new QPushButton("Cancel");
+
+    buttonLayout->addWidget(deleteButton);
+    buttonLayout->addWidget(cancelButton);
+    layout->addWidget(templateList);
+    layout->addLayout(buttonLayout);
+    setLayout(layout);
+
+    connect(deleteButton,SIGNAL(clicked(bool)),this,SLOT(deletTemplate()));
+    connect(cancelButton,SIGNAL(clicked(bool)),this,SLOT(reject()));
+}
+DeleteTemplateDialog::~DeleteTemplateDialog()
+{
+
+}
+
+void DeleteTemplateDialog::setTemplateList(QStringList list,QComboBox *combBox)
+{
+    templateList->addItems(list);
+    templateListComboIns = combBox;
+}
+
+void DeleteTemplateDialog::deletTemplate()
+{
+    QString templateName = templateList->currentItem()->data(Qt::DisplayRole).toString();
+    emit clickDelete(templateName);
+    QListWidgetItem *item = templateList->currentItem();
+    delete item;
+    int index = templateListComboIns->findText(templateName);
+    templateListComboIns->removeItem(index);
+//    templateList->removeItemWidget(item);
+//    QMessageBox::information(this,"",templateName,QMessageBox::Yes);
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(templateList,SIGNAL(currentIndexChanged(QString)),templateControl,SLOT(loadTemplate(QString)));
     connect(templateView,SIGNAL(itemClickedView(QStandardItem*)),propertyView,SLOT(setCurrentItem(QStandardItem*)));
     connect(templateView,SIGNAL(itemDeleted()),propertyView,SLOT(resetAllData()));
+    connect(makeTreeButton,SIGNAL(clicked(bool)),this,SLOT(makeFolderTree()));
     connect(cancelButton,SIGNAL(clicked()),qApp,SLOT(quit()));
 
 //    connect(testButton,SIGNAL(clicked(bool)),this,SLOT(testSlot()));
@@ -39,9 +80,10 @@ void MainWindow::createActions()
     connect(newAct,SIGNAL(triggered(bool)),this,SLOT(newProject()));
 
     saveTemplateAct = new QAction(tr("Save Template"));
-    connect(saveTemplateAct,SIGNAL(triggered(bool)),SLOT(saveTemplate()));
+    connect(saveTemplateAct,SIGNAL(triggered(bool)),this,SLOT(saveTemplate()));
 
     deleteTemplateAct = new QAction(tr("delete Template"));
+    connect(deleteTemplateAct,SIGNAL(triggered(bool)),this,SLOT(deleteTemplate()));
 
     exportTemplateAct = new QAction(tr("export Template"));
 
@@ -143,14 +185,7 @@ void MainWindow::selectDiractory()
         rootPathEdit->setText(folderName);
         QDir dirName(folderName);
         templateView->setRootFolderName(dirName.dirName());
-//        rootPathEdit->setReadOnly(true);
     }
-
-//    QPalette *palette = new QPalette();
-//    palette->setColor(QPalette::Base,Qt::gray);
-//    palette->setColor(QPalette::Text,Qt::darkGray);
-//    rootPathEdit->setPalette(*palette);
-
 }
 
 void MainWindow::newProject()
@@ -176,7 +211,6 @@ void MainWindow::saveTemplate()
                  templateList->addItem(templateName);
                  templateNameIndex = templateList->findData(templateName,Qt::DisplayRole);
                  templateList->setCurrentIndex(templateNameIndex);
- //                templateControl = new TemplateControl(this);
              }else{
                  QMessageBox::information(this,"","Save fales",QMessageBox::Yes);
              }
@@ -187,6 +221,14 @@ void MainWindow::saveTemplate()
      }
 }
 
+void MainWindow::deleteTemplate()
+{
+    DeleteTemplateDialog deleteTemplateWindow(this);
+    deleteTemplateWindow.setTemplateList(templateControl->readTemplateList(),templateList);
+    connect(&deleteTemplateWindow,SIGNAL(clickDelete(QString)),templateControl,SLOT(deleteTemplate(QString)));
+    deleteTemplateWindow.exec();
+}
+
 void MainWindow::createFolder()
 {
     templateView->insertFolder();
@@ -195,6 +237,41 @@ void MainWindow::createFolder()
 void MainWindow::deleteFolder()
 {
     templateView->deleteFolder();
+}
+
+void MainWindow::makeFolderTree()
+{
+    QString rootPaht = rootPathEdit->text();
+    if(rootPaht!="")
+    {
+        QDir root(rootPaht);
+        QString rootDirNmae = root.dirName();
+        QModelIndex rootIndex = preView->model()->index(0,0,preView->rootIndex());
+        if(preView->model()->data(rootIndex,Qt::DisplayRole).toString() == rootDirNmae)
+        {
+            makefolderLoop(rootIndex,root);
+        }
+    }else{
+        QMessageBox::information(this,"Warning","set the root folder",QMessageBox::Yes);
+    }
+}
+
+void MainWindow::makefolderLoop(QModelIndex parentIndex, QDir rootDir)
+{
+    bool hasChildren = preView->model()->hasChildren(parentIndex);
+    if(hasChildren)
+    {
+        int count = preView->model()->rowCount(parentIndex);
+        for(int i=0;i<count;i++)
+        {
+            QModelIndex index = preView->model()->index(i,0,parentIndex);
+            QString data = preView->model()->data(index,Qt::DisplayRole).toString();
+            rootDir.mkdir(data);
+            QDir dir(rootDir);
+            dir.cd(data);
+            makefolderLoop(index,dir);
+        }
+    }
 }
 
 void MainWindow::testSlot()

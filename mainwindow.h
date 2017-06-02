@@ -16,6 +16,31 @@
 #include "preview.h"
 #include "propertyview.h"
 #include "templatecontrol.h"
+#include <QListWidget>
+#include <QDialog>
+#include <QDir>
+
+class DeleteTemplateDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    DeleteTemplateDialog(QWidget *parent = 0);
+    ~DeleteTemplateDialog();
+    void setTemplateList(QStringList list,QComboBox *combBox);
+
+signals:
+    void clickDelete(QString name);
+
+private:
+
+    QListWidget *templateList;
+    QPushButton *deleteButton;
+    QPushButton *cancelButton;
+    QComboBox *templateListComboIns;
+private slots:
+    void deletTemplate();
+
+};
 
 class MainWindow : public QMainWindow
 {
@@ -25,12 +50,16 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+signals:
+    void deleteTemplateName(QString templateName);
+
 private:
     void setWindow();
     void createActions();
     void createMenus();
     void createStatusBar();
     void createCentralWidget();
+    void makefolderLoop(QModelIndex parentIndex,QDir rootDir);
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -62,8 +91,10 @@ private slots:
     void selectDiractory();
     void newProject();
     void saveTemplate();
+    void deleteTemplate();
     void createFolder();
     void deleteFolder();
+    void makeFolderTree();
     void testSlot();
 
 

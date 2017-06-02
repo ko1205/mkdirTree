@@ -71,6 +71,12 @@ bool TemplateControl::saveTemplate(QString name)
     return false;
 }
 
+void TemplateControl::setFolderIcon(QIcon icon)
+{
+    folderIcon = icon;
+}
+
+
 void TemplateControl::loadTemplate(QString templateName)
 {
     QDomElement root = domDocument->documentElement();
@@ -93,6 +99,34 @@ void TemplateControl::loadTemplate(QString templateName)
         QStandardItem *item =  templateViewIns->root();
         readTemplateFileLoop(element,*item);
         templateViewIns->previewUpdate();
+    }
+}
+
+void TemplateControl::deleteTemplate(QString templateName)
+{
+    QFile file(localSaveFileName);
+    if(file.open(QFile::WriteOnly|QFile::Text))
+    {
+        QTextStream out(&file);
+        QDomElement root = domDocument->documentElement();
+        if(root.tagName()=="xml")
+        {
+            QDomElement element= root.firstChildElement();
+            while(!element.isNull())
+            {
+                if(element.tagName()=="template")
+                {
+                    if(element.attribute("name") == templateName)
+                    {
+                        break;
+                    }
+                }
+                element = element.nextSiblingElement();
+            }
+            root.removeChild(element);
+            domDocument->replaceChild(root,domDocument->documentElement());
+            domDocument->save(out,4);
+        }
     }
 }
 
@@ -158,8 +192,4 @@ void TemplateControl::initTemplateFile()
     }
 }
 
-void TemplateControl::setFolderIcon(QIcon icon)
-{
-    folderIcon = icon;
-}
 
