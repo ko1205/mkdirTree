@@ -250,6 +250,7 @@ void MainWindow::makeFolderTree()
         if(preView->model()->data(rootIndex,Qt::DisplayRole).toString() == rootDirNmae)
         {
             makefolderLoop(rootIndex,root);
+            QMessageBox::information(this,"information","folder create completed.",QMessageBox::Yes);
         }
     }else{
         QMessageBox::information(this,"Warning","set the root folder",QMessageBox::Yes);
@@ -267,6 +268,7 @@ void MainWindow::makefolderLoop(QModelIndex parentIndex, QDir rootDir)
             QModelIndex index = preView->model()->index(i,0,parentIndex);
             QString data = preView->model()->data(index,Qt::DisplayRole).toString();
             rootDir.mkdir(data);
+//            statusBar()->showMessage(rootDir.absolutePath()+"/"+data);
             QDir dir(rootDir);
             dir.cd(data);
             makefolderLoop(index,dir);
