@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include <QWidget>
 #include "templateview.h"
+#include <QApplication>
 
 class TemplateControl : public QObject
 {
@@ -31,7 +32,8 @@ private:
 
     QDomDocument *domDocument;
     TemplateView *templateViewIns;
-    QString localSaveFileName = "template.xml";
+//    QString localSaveFileName = "template.xml";
+    QString localSaveFileName = QApplication::applicationDirPath()+"/template.xml";
     QIcon folderIcon;
 };
 

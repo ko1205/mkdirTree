@@ -180,7 +180,7 @@ void MainWindow::createCentralWidget()
 
 void MainWindow::selectDiractory()
 {
-    QString folderName = QFileDialog::getExistingDirectory(this);
+    QString folderName = QFileDialog::getExistingDirectory(this,"set root path",QDir::home().path());
     if(folderName!=""){
         rootPathEdit->setText(folderName);
         QDir dirName(folderName);
