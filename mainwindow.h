@@ -94,6 +94,8 @@ private slots:
     void newProject();
     void saveTemplate();
     void deleteTemplate();
+    void exportTemplate();
+    void importTemplate();
     void createFolder();
     void deleteFolder();
     void expandAll();

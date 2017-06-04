@@ -18,6 +18,8 @@ public:
     QStringList readTemplateList();
     bool saveTemplate(QString name);
     void setFolderIcon(QIcon icon);
+    bool exportTemplate(QString filePath,QString templateName);
+    bool importTemplate(QString filePath);
 
 signals:
 

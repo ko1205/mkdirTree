@@ -86,8 +86,10 @@ void MainWindow::createActions()
     connect(deleteTemplateAct,SIGNAL(triggered(bool)),this,SLOT(deleteTemplate()));
 
     exportTemplateAct = new QAction(tr("export Template"));
+    connect(exportTemplateAct,SIGNAL(triggered(bool)),this,SLOT(exportTemplate()));
 
     importTemplateAct = new QAction(tr("import Template"));
+    connect(importTemplateAct,SIGNAL(triggered(bool)),this,SLOT(importTemplate()));
 
     createAct = new QAction(tr("createFolder"),this);
     connect(createAct,SIGNAL(triggered(bool)),this,SLOT(createFolder()));
@@ -236,6 +238,37 @@ void MainWindow::deleteTemplate()
     deleteTemplateWindow.setTemplateList(templateControl->readTemplateList(),templateList);
     connect(&deleteTemplateWindow,SIGNAL(clickDelete(QString)),templateControl,SLOT(deleteTemplate(QString)));
     deleteTemplateWindow.exec();
+}
+
+void MainWindow::exportTemplate()
+{
+    bool ok;
+    QString filePath = QFileDialog::getSaveFileName(this,"Export Template",QDir::home().path(),"XML files (*.xml)");
+    QString templateName = QInputDialog::getText(this,"Save Template","TemplateName",QLineEdit::Normal,"template",&ok);
+    if(!filePath.isEmpty() && ok && !templateName.isEmpty())
+    {
+        if(templateControl->exportTemplate(filePath,templateName))
+        {
+            QMessageBox::information(this,"","export completed",QMessageBox::Yes);
+        }else{
+            QMessageBox::information(this,"","Save fales",QMessageBox::Yes);
+        }
+    }
+}
+
+void MainWindow::importTemplate()
+{
+    QString filePath = QFileDialog::getOpenFileName(this,"Import Template",QDir::home().path(),"XML files (*.xml)");
+    if(!filePath.isEmpty())
+    {
+        if(templateControl->importTemplate(filePath))
+        {
+            saveTemplate();
+        }else{
+            QMessageBox::information(this,"","Import fales",QMessageBox::Yes);
+        }
+    }
+//    QMessageBox::information(this,"","importTemplate Test",QMessageBox::Yes);
 }
 
 void MainWindow::createFolder()

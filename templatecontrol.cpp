@@ -1,5 +1,6 @@
 #include "templatecontrol.h"
 #include "common.h"
+#include <QMessageBox>
 
 TemplateControl::TemplateControl(TemplateView *templateView,QObject *parent) : QObject(parent)
 {
@@ -74,6 +75,60 @@ bool TemplateControl::saveTemplate(QString name)
 void TemplateControl::setFolderIcon(QIcon icon)
 {
     folderIcon = icon;
+}
+
+bool TemplateControl::exportTemplate(QString filePath,QString templateName)
+{
+    QDomDocument *exportDoc = new QDomDocument();
+    QFile file(filePath);
+    if(file.open(QFile::WriteOnly|QFile::Text))
+    {
+        QTextStream out(&file);
+        QDomElement root = exportDoc->createElement("xml");
+        QDomElement domElement = exportDoc->createElement("template");
+        root.appendChild(domElement);
+        domElement.setAttribute("name",templateName);
+        QStandardItem *item = templateViewIns->root();
+        QModelIndex rootIndex= item->index();
+        readTemplateViewLoop(domElement,rootIndex);
+        exportDoc->appendChild(root);
+        exportDoc->save(out,4);
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool TemplateControl::importTemplate(QString filePath)
+{
+    QFile file(filePath);
+    if(file.open(QFile::ReadOnly|QFile::Text))
+    {
+        QDomDocument *importDoc = new QDomDocument();
+        if(!importDoc->setContent(&file))
+        {
+            file.close();
+            QMessageBox::information(qobject_cast<QWidget*>(this->parent()),"","Invalid save file",QMessageBox::Yes);
+            return false;
+        }
+        file.close();
+        QDomElement root = importDoc->documentElement();
+        if(root.tagName()=="xml")
+        {
+            QDomElement element = root.firstChildElement("template");
+            templateViewIns->selectAll();
+            templateViewIns->deleteFolder();
+            QStandardItem *item =  templateViewIns->root();
+            readTemplateFileLoop(element,*item);
+            templateViewIns->previewUpdate();
+            return true;
+        }else{
+            QMessageBox::information(qobject_cast<QWidget*>(this->parent()),"","Invalid save file",QMessageBox::Yes);
+            return false;
+        }
+    }else{
+        return false;
+    }
 }
 
 
