@@ -31,6 +31,7 @@ public slots:
     void showIndex();
     void insertFolder();
     void deleteFolder();
+    void collapseAllNRoot();
     void setRootFolderName(const QString &rootName);
 
 private:
@@ -45,6 +46,8 @@ private:
     QMenu *popupMenu;
     QAction *insertAct;
     QAction *deleteAct;
+    QAction *expandAllAct;
+    QAction *collapseAllAct;
 
     QIcon folderIcon;
     QString NewFolderName;

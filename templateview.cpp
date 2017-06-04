@@ -40,15 +40,23 @@ TemplateView::TemplateView(QWidget *parent)
     popupMenu = new QMenu(this);
     insertAct = new QAction("CreateFolder",this);
     deleteAct = new QAction("DeleteFolder",this);
+    expandAllAct = new QAction("Expand All",this);
+    collapseAllAct = new QAction("Collapse All",this);
 
     popupMenu->addAction(insertAct);
     popupMenu->addAction(deleteAct);
+    popupMenu->addSeparator();
+    popupMenu->addAction(expandAllAct);
+    popupMenu->addAction(collapseAllAct);
+
 
 //    connect(this,SIGNAL(activated(QModelIndex)),this,SLOT(storOldName(QModelIndex)));
     connect(this,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(storOldName(QModelIndex)));
     connect(templateModel,SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),this,SLOT(checkRename(QModelIndex)));
     connect(insertAct,SIGNAL(triggered(bool)),this,SLOT(insertFolder()));
     connect(deleteAct,SIGNAL(triggered(bool)),this,SLOT(deleteFolder()));
+    connect(expandAllAct,SIGNAL(triggered(bool)),this,SLOT(expandAll()));
+    connect(collapseAllAct,SIGNAL(triggered(bool)),this,SLOT(collapseAllNRoot()));
     connect(deleteKey,SIGNAL(activated()),this,SLOT(deleteFolder()));
     connect(templateModel,SIGNAL(rowsInserted(QModelIndex,int,int)),this,SLOT(activeStor(QModelIndex,int ,int)));
     connect(this,SIGNAL(clicked(QModelIndex)),this,SLOT(itemClicked(QModelIndex)));
@@ -170,6 +178,12 @@ void TemplateView::deleteFolder()
     emit itemDeleted();
 //    previewIns->updatePreVew();
 
+}
+
+void TemplateView::collapseAllNRoot()
+{
+    collapseAll();
+    expand(root()->index());
 }
 
 void TemplateView::setRootFolderName(const QString &rootName)

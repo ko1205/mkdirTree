@@ -94,6 +94,12 @@ void MainWindow::createActions()
 
     deleteAct = new QAction(tr("deleteFolder"),this);
     connect(deleteAct,SIGNAL(triggered(bool)),this,SLOT(deleteFolder()));
+
+    expandAllAct = new QAction("Expand All",this);
+    connect(expandAllAct,SIGNAL(triggered(bool)),this,SLOT(expandAll()));
+
+    collapseAllAct = new QAction("Collapse All",this);
+    connect(collapseAllAct,SIGNAL(triggered(bool)),this,SLOT(collapseAll()));
 }
 
 void MainWindow::createMenus()
@@ -111,6 +117,9 @@ void MainWindow::createMenus()
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(createAct);
     editMenu->addAction(deleteAct);
+    editMenu->addSeparator();
+    editMenu->addAction(expandAllAct);
+    editMenu->addAction(collapseAllAct);
 
     menuBar()->setNativeMenuBar(0);
 }
@@ -237,6 +246,17 @@ void MainWindow::createFolder()
 void MainWindow::deleteFolder()
 {
     templateView->deleteFolder();
+}
+
+void MainWindow::expandAll()
+{
+    templateView->expandAll();
+}
+
+void MainWindow::collapseAll()
+{
+    templateView->collapseAll();
+    templateView->expand(templateView->root()->index());
 }
 
 void MainWindow::makeFolderTree()

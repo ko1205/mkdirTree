@@ -71,6 +71,8 @@ private:
     QAction *importTemplateAct;
     QAction *createAct;
     QAction *deleteAct;
+    QAction *expandAllAct;
+    QAction *collapseAllAct;
 
     QLineEdit *rootPathEdit;
     QPushButton *rootPathButton;
@@ -94,6 +96,8 @@ private slots:
     void deleteTemplate();
     void createFolder();
     void deleteFolder();
+    void expandAll();
+    void collapseAll();
     void makeFolderTree();
     void testSlot();
 
